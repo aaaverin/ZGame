@@ -3,13 +3,10 @@ using System.Collections;
 
 public class ParticleCollisionDetector : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public PrototypeController.IParticleCollisionListener listener;
+
+	public void OnParticleCollision(GameObject other)
+	{
+		listener.OnParticleCollision (other);
 	}
 }

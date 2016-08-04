@@ -7,11 +7,14 @@ using Random = UnityEngine.Random;
 
 public class PrototypeController : MonoBehaviour
 {
+	//--Интерфейс
 	public interface IParticleCollisionListener
 	{
 		void OnParticleCollision(GameObject other);
 	}
 
+
+	//--Конфиги
 	public class UnitConfig
 	{
 		public Vector2 Size;
@@ -40,6 +43,8 @@ public class PrototypeController : MonoBehaviour
 		public float AmmoSpeed = 1.5f;
 	}
 
+
+	//--Мапа
 	public class Map
 	{
 		static Vector2 Size = new Vector2(9,12);
@@ -48,29 +53,33 @@ public class PrototypeController : MonoBehaviour
 		{
 			float x = 0;
 			float y = 0;
+			float minX = -4.5f;
+			float minY = -6;
 			bool xNoty = Random.value > 0.5;
 			if (xNoty) {
-				x = Random.Range (0, Size.x);
+				x = Random.Range (minX, Size.x + minX);
 				if (visual.max.x < x || visual.min.x > x) {
-					y = Random.Range (0, Size.y);
+					y = Random.Range (minY, Size.y+minY);
 				} else {
-					y = Random.Range (0, Size.y - visual.size.y);
+					y = Random.Range (minY, Size.y+minY - visual.size.y);
 				}
 			} else {
-				y = Random.Range (0, Size.y);
+				y = Random.Range (minY, Size.y+minY);
 				if (visual.max.y < y || visual.min.y > y) {
-					x = Random.Range (0, Size.x);
+					x = Random.Range (minX, Size.x + minX);
 				} else {
-					x = Random.Range (0, Size.x - visual.size.x);
+					x = Random.Range (minX, Size.x + minX- visual.size.x);
 				}
 			}
 			return new Vector2 (x, y);
 		}
 	}
 
+
+	//--Плаер
 	public class Player
 	{
-		public PlayerConfig Config;
+		public PlayerConfig Config = new PlayerConfig();
 
 		public Transform transform;
 		RectTransform hpRect;
@@ -109,10 +118,12 @@ public class PrototypeController : MonoBehaviour
 
 			ps.gameObject.SetActive (true);
 			transform.LookAt (enemy.t.position);
-			ps.startLifetime = dist / 50;
+			ps.startLifetime = dist / 1;
 		}
 	}
 
+
+	//--Enemy
 	public class Enemy : IParticleCollisionListener
 	{
 		const float ATTACK_RANGE = 0.1f;
@@ -137,11 +148,13 @@ public class PrototypeController : MonoBehaviour
 			t = go.transform;
 			hpRect = e.GetComponentInChildren<RectTransform>();
 			Config = config;
+			go.GetComponent<ParticleCollisionDetector>().listener = this;
 		}
 
 		public void OnParticleCollision(GameObject other)
 		{
-			Damage (5);
+			Debug.Log ("damaged");
+			Damage (500);
 		}
 
 		//mb reset?
@@ -164,7 +177,7 @@ public class PrototypeController : MonoBehaviour
 
 		public void Damage(float damage)
 		{
-			var m = hpRect.offsetMin.x + 0.005f;
+			var m = hpRect.offsetMin.x + 0.005f * damage;
 			if (m < hpRect.offsetMax.x)
 				hpRect.offsetMin = new Vector2 (m, hpRect.offsetMin.y);
 			else {
@@ -192,6 +205,9 @@ public class PrototypeController : MonoBehaviour
 			dist -= shift;
 		}
 	}
+
+	[SerializeField]
+	Canvas canvas;
 
 	EnemyConfig zombieConfig = new EnemyConfig
 	{
@@ -273,6 +289,7 @@ public class PrototypeController : MonoBehaviour
 	{
 		var go = Instantiate (enemyPrefab);
 		go.transform.position = Map.GetRandom (vision);
+		go.transform.SetParent (canvas.transform, false);
 		return new Enemy (go, P, config);
 	}
 
@@ -296,7 +313,7 @@ public class PrototypeController : MonoBehaviour
 
 	void PlayerAttack(){
 		
-		if (targetEnemy == null) {
+		if (targetEnemy == null && enemies.Count > 0) {
 			targetEnemy = enemies.Aggregate((min,x) => (min==null || min.dist>x.dist)?x:min);
 		}
 		/*
@@ -308,10 +325,14 @@ public class PrototypeController : MonoBehaviour
 		}*/
 	}
 
-	// Update is called once per frame
+
+
 	void Update ()
 	{
+		
 		vision.center = playerTransform.position;
+
+		Spawn ();
 
 		enemies.ForEach (x => {
 			x.Move();
@@ -319,9 +340,10 @@ public class PrototypeController : MonoBehaviour
 		});
 
 		playerAttackTimer += Time.deltaTime;
-		if (playerAttackTimer > PlayerConfig.) {
-			playerAttackTimer -= player_attack_cd;
+		if (playerAttackTimer > 1/P.Config.AttackPerSecond) {
+			playerAttackTimer -= 1/P.Config.AttackPerSecond;
 			PlayerAttack ();
+			P.Attack (targetEnemy);
 
 			if (targetEnemy != null && targetEnemy.DEAD) {
 				enemies.Remove (targetEnemy);
