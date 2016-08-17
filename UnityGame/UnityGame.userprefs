@@ -2,8 +2,17 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PrototypeController.cs">
     <Files>
-      <File FileName="Assets\Scripts\PrototypeController.cs" Line="336" Column="3" />
-      <File FileName="Assets\Scripts\Components\ParticleCollisionDetector.cs" Line="4" Column="39" />
+      <File FileName="Assets\Scripts\PrototypeController.cs" Line="117" Column="13" />
+      <File FileName="Assets\Scripts\Components\AlternativeFire.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Classes\Player.cs" Line="46" Column="11" />
+      <File FileName="Assets\Scripts\Components\ParticleCollisionDetector.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Classes\Map.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Classes\Configs.cs" Line="22" Column="18" />
+      <File FileName="Assets\Scripts\Classes\Enemy.cs" Line="30" Column="29" />
+      <File FileName="Assets\Scripts\Components\Billboard.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Components\SyncVisual.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\JoyStick.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Components\SpriteResizer.cs" Line="16" Column="10" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -27,14 +27,17 @@ public class JoyStick : MonoBehaviour
 		back = GetComponent<SpriteRenderer>();
 	} 
 
+	[SerializeField]
+	Transform player;
+
 	private void Update()
 	{
-		var pos = Camera.main.transform.position;
+		var pos = player.position;
 		pos -= Dir.normalized * 0.1f;
-		Camera.main.transform.position = pos;
+		player.position = pos;
 		if (Input.GetMouseButtonDown(0))
 		{
-			Vector2 mousePos = Input.mousePosition;
+			//Vector2 mousePos = Input.mousePosition;
 			if (Input.mousePosition.y < Screen.height/3)
 			{
 				back.sprite  = backSprite;
@@ -61,7 +64,7 @@ public class JoyStick : MonoBehaviour
 			Destroy(stick);
 			back.sprite = null;
 		}
-
+	
 
 	}
 }
